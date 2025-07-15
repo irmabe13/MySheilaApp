@@ -1,5 +1,21 @@
 services:
 
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: mysheila
+    restart: unless-stopped
+    environment:
+      - DB_USER
+      - DB_PASSWORD
+      - DB_NAME
+      - DB_URL
+    ports:
+      - '8080:${SERVER_PORT:-8080}'
+    depends_on:
+      - database
+
   database:
     image: mysql:8.0
     container_name: mysheila_db
