@@ -26,17 +26,23 @@ public class AuthenticationService implements IAuthenticationService {
     private final PasswordEncoder passwordEncoder;
 
 
+    private boolean isPasswordValid(String password) {
+        String passwordRegex = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[!@#$%^&*()_+\\-=\\[\\]{};':\"\\\\|,.<>/?]).{12,}$";
+        return password != null && password.matches(passwordRegex);
+    }
+
+
     @Override
     public ResponseEntity<String> register(RegisterRequest request) {
         if (this.userRepository.findByEmail(request.email()).isPresent()) {
-            throw new UserAlreadyExistException("User already exists: " + request.email());
+            throw new UserAlreadyExistException("User already exist : " + request.email());
         }
 
         final Role defaultRole = this.roleRepository.findByLabel("USER")
                 .orElseThrow(() -> new UserAlreadyExistException("User doesn't exist : " + request.email()));
 
         if (!isPasswordValid(request.password())) {
-            throw new IllegalArgumentException("Password must contain at least 8 characters, including an uppercase letter, a lowercase letter, a digit, and a special character.");
+            throw new IllegalArgumentException("Password must contain at least 12 characters, including an uppercase letter, a lowercase letter, a digit, and a special character.");
         }
 
 
@@ -53,12 +59,6 @@ public class AuthenticationService implements IAuthenticationService {
 
         return ResponseEntity.ok("User registered successfully");
     }
-
-    private boolean isPasswordValid(String password) {
-        String passwordRegex = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[!@#$%^&*()_+\\-=\\[\\]{};':\"\\\\|,.<>/?]).{8,}$";
-        return password != null && password.matches(passwordRegex);
-    }
-
 
     @Override
     public ResponseEntity<String> login(LoginRequest request) {
