@@ -1,4 +1,4 @@
-package com.irma.mysheila.dto.authentication;
+package com.irma.mysheila.dto;
 
 public record MeResponse(
         Long id,

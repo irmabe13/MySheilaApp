@@ -1,8 +1,8 @@
 package com.irma.mysheila.controllers;
 
-import com.irma.mysheila.dto.authentication.LoginRequest;
-import com.irma.mysheila.dto.authentication.MeResponse;
-import com.irma.mysheila.dto.authentication.RegisterRequest;
+import com.irma.mysheila.dto.LoginRequest;
+import com.irma.mysheila.dto.MeResponse;
+import com.irma.mysheila.dto.RegisterRequest;
 import com.irma.mysheila.entities.User;
 import com.irma.mysheila.services.AuthService;
 import jakarta.servlet.http.HttpServletRequest;
