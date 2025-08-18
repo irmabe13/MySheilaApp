@@ -1,0 +1,21 @@
+spring:
+  datasource:
+    url: jdbc:h2:mem:testdb
+    driver-class-name: org.h2.Driver
+    username: sa
+    password:
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+    database-platform: org.hibernate.dialect.H2Dialect
+
+  h2:
+    console:
+      enabled: true
+
+
+app:
+  security:
+    jwt-secret: 698811f3f9fe4e193aea1a0c6804899949a46a39b523dfe26350d1da609f7e49
+    jwt-expiration: 7200000

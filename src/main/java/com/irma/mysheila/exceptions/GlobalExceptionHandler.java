@@ -1,46 +1,42 @@
 package com.irma.mysheila.exceptions;
 
+
+import jakarta.validation.ConstraintViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import org.springframework.web.bind.annotation.ControllerAdvice;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.RestControllerAdvice;
 
-import java.time.LocalDateTime;
-import java.time.format.DateTimeParseException;
-import java.util.Map;
+import java.time.Instant;
+import java.util.List;
 
-@ControllerAdvice
+@RestControllerAdvice
 public class GlobalExceptionHandler {
 
-    @ExceptionHandler(UserAlreadyExistException.class)
-    public ResponseEntity<?> handleUserExists(UserAlreadyExistException ex) {
-        return buildErrorResponse(ex.getMessage(), "Cette adresse email est déjà utilisée", HttpStatus.CONFLICT);
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    public ResponseEntity<ApiError> handleValidation(MethodArgumentNotValidException ex) {
+        List<String> details = ex.getBindingResult().getFieldErrors().stream()
+                .map(fe -> fe.getField()+": "+fe.getDefaultMessage()).toList();
+        ApiError err = new ApiError(Instant.now(), HttpStatus.BAD_REQUEST.value(), "Bad Request", "Validation failed", details);
+        return ResponseEntity.badRequest().body(err);
     }
 
-    @ExceptionHandler(UsernameNotFoundException.class)
-    public ResponseEntity<?> handleUserNotFound(UsernameNotFoundException ex) {
-        return buildErrorResponse(ex.getMessage(), "Cet utilisateur n'existe pas", HttpStatus.NOT_FOUND);
+    @ExceptionHandler(ConstraintViolationException.class)
+    public ResponseEntity<ApiError> handleConstraint(ConstraintViolationException ex) {
+        ApiError err = new ApiError(Instant.now(), 400, "Bad Request", ex.getMessage(), List.of());
+        return ResponseEntity.badRequest().body(err);
     }
 
-    @ExceptionHandler({ IllegalArgumentException.class, DateTimeParseException.class })
-    public ResponseEntity<?> handleBadRequest(IllegalArgumentException ex) {
-        return buildErrorResponse(ex.getMessage(),"Mauvaise requête", HttpStatus.BAD_REQUEST);
+    @ExceptionHandler(IllegalArgumentException.class)
+    public ResponseEntity<ApiError> handleIllegalArg(IllegalArgumentException ex) {
+        ApiError err = new ApiError(Instant.now(), 400, "Bad Request", ex.getMessage(), List.of());
+        return ResponseEntity.badRequest().body(err);
     }
 
     @ExceptionHandler(Exception.class)
-    public ResponseEntity<?> handleGeneric(Exception ex) {
-        return buildErrorResponse(ex.getMessage(), "Une erreur inattendue est survenue", HttpStatus.INTERNAL_SERVER_ERROR);
-    }
-
-    private ResponseEntity<Map<String, Object>> buildErrorResponse(String error, String details, HttpStatus status) {
-        Map<String, Object> body = Map.of(
-                "timestamp", LocalDateTime.now(),
-                "error", error,
-                "details", details,
-                "status", status.value()
-        );
-        return new ResponseEntity<>(body, status);
+    public ResponseEntity<ApiError> handleOther(Exception ex) {
+        ApiError err = new ApiError(Instant.now(), 500, "Internal Server Error", ex.getMessage(), List.of());
+        return ResponseEntity.status(500).body(err);
     }
 }
-
