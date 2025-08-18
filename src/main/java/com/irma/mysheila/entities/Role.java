@@ -1,23 +1,22 @@
 package com.irma.mysheila.entities;
 
-import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
 
-@Data
-@Builder
-@AllArgsConstructor
-@NoArgsConstructor
+import jakarta.persistence.*;
+import lombok.*;
+
 @Entity
 @Table(name = "roles")
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
 public class Role {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id_role")
-    private int idRole;
+    private Long id;
 
-    @Column(nullable = false)
-    private String label;
+    @Column(nullable = false, unique = true)
+    private String name;
 }
