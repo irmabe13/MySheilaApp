@@ -3,8 +3,8 @@ package com.irma.mysheila.services;
 
 import com.irma.mysheila.config.security.CookieUtil;
 import com.irma.mysheila.config.security.JwtService;
-import com.irma.mysheila.dto.authentication.LoginRequest;
-import com.irma.mysheila.dto.authentication.RegisterRequest;
+import com.irma.mysheila.dto.LoginRequest;
+import com.irma.mysheila.dto.RegisterRequest;
 import com.irma.mysheila.entities.Role;
 import com.irma.mysheila.entities.Token;
 import com.irma.mysheila.entities.User;
