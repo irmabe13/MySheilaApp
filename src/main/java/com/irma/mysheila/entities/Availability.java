@@ -1,9 +1,10 @@
 package com.irma.mysheila.entities;
 
 
-import com.irma.mysheila.enums.DaySlot;
 import jakarta.persistence.*;
 import lombok.*;
+
+import java.time.LocalTime;
 
 @Entity
 @Table(name = "availabilities")
@@ -13,18 +14,19 @@ import lombok.*;
 @AllArgsConstructor
 @Builder
 public class Availability {
+    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id_availability") private Integer idAvailability;
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    @Column(name = "hour_begin", nullable = false)
+    private LocalTime hourBegin;
 
-    @ManyToOne(optional = false) @JoinColumn(name = "user_id")
+    @Column(name = "hour_end",   nullable = false)
+    private LocalTime hourEnd;
+
+    @Column(name = "day",        nullable = false, length = 20)
+    private String day;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "id_user", nullable = false)
     private User user;
-
-    @Column(name = "day_of_week", nullable = false)
-    private String dayOfWeek;
-
-    @Enumerated(EnumType.STRING)
-    @Column(nullable = false)
-    private DaySlot slot;
 }

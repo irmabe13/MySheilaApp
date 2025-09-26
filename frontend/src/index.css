@@ -1,0 +1,53 @@
+@import "tailwindcss";
+
+
+/* ================= TOKENS (Liquid‑Week) ================= */
+@theme {
+  --color-ink: #0b1020;
+  --color-paper: #ffffff;
+
+
+  /* Palette Liquid */
+  --color-lav-50: #ecebff;
+  --color-lav-100: #e1d9ff;
+  --color-indigo: #6e56f6; /* accent principal */
+  --color-mint: #58f1a7; /* accent 2 */
+  --color-azure: #00d4ff; /* accent 3 */
+  --color-night: #171430; /* texte accent */
+
+
+  --radius-xl2: 1.25rem;
+}
+
+
+/* ================= UTILITAIRES DESIGN ================= */
+@utility glass {
+  background: color-mix(in oklab, white 82%, transparent);
+  backdrop-filter: blur(12px);
+  border: 1px solid color-mix(in oklab, var(--color-night) 16%, transparent);
+}
+
+
+@utility noise {
+  pointer-events: none;
+  opacity: .06;
+  background-image: radial-gradient(#000 0.6px, transparent 0.6px);
+  background-size: 14px 14px;
+}
+
+
+@utility ring-glow {
+  box-shadow:
+          0 0 0 2px color-mix(in oklab, var(--color-indigo) 38%, transparent),
+          0 0 28px color-mix(in oklab, var(--color-mint) 35%, transparent);
+}
+
+
+/* Motion */
+@keyframes bob { 0%,100%{ transform: translateY(0)} 50%{ transform: translateY(-5px)} }
+@keyframes sheenSlide { 0%{ transform: translateX(-55%);} 100%{ transform: translateX(55%);} }
+@utility floaty { animation: bob 7s ease-in-out infinite; }
+@utility sheen { animation: sheenSlide 6s ease-in-out infinite; }
+
+
+@media (prefers-reduced-motion: reduce) { .floaty, .sheen { animation: none; } }
