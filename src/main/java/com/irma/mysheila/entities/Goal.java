@@ -1,7 +1,5 @@
 package com.irma.mysheila.entities;
 
-
-import com.irma.mysheila.enums.FrequencyType;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -13,24 +11,15 @@ import lombok.*;
 @AllArgsConstructor
 @Builder
 public class Goal {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    @Column(name = "id_goal") private Integer idGoal;
 
-    @ManyToOne(optional = false) @JoinColumn(name = "category_id")
+    @Column(name = "name", nullable = false) private String name;
+    @Column(name = "periodicity", nullable = false, length = 50) private String periodicity;
+    @Column(name = "frequency", nullable = false) private Integer frequency;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "id_category", nullable = false)
     private Category category;
-
-    @Column(nullable = false)
-    private String name;
-
-    @Enumerated(EnumType.STRING)
-    @Column(name = "frequency_type", nullable = false)
-    private FrequencyType frequencyType;
-
-    @Column(name = "frequency_count", nullable = false)
-    private int frequencyCount;
-
-    @Column(name = "default_duration_minutes", nullable = false)
-    private int defaultDurationMinutes;
 }

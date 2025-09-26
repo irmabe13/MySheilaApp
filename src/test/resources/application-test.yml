@@ -6,16 +6,23 @@ spring:
     password:
   jpa:
     hibernate:
-      ddl-auto: update
-    show-sql: true
+      ddl-auto: validate
     database-platform: org.hibernate.dialect.H2Dialect
+    show-sql: true
+
+  flyway:
+    enabled: true
+    locations: classpath:db/migration
+    baseline-on-migrate: true
 
   h2:
     console:
       enabled: true
 
+server:
+  forward-headers-strategy: framework
 
 app:
   security:
     jwt-secret: 698811f3f9fe4e193aea1a0c6804899949a46a39b523dfe26350d1da609f7e49
-    jwt-expiration: 7200000
+    jwt-expiration: 3600000

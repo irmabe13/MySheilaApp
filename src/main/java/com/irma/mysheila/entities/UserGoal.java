@@ -1,24 +1,25 @@
 package com.irma.mysheila.entities;
 
+
 import jakarta.persistence.*;
 import lombok.*;
 
 @Entity
-@Table(name = "user_goals")
+@Table(name = "users_goals")
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
 public class UserGoal {
+    @EmbeddedId
+    private UsersGoalsId id;
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-
-    @ManyToOne(optional = false) @JoinColumn(name = "user_id")
+    @ManyToOne(fetch = FetchType.LAZY) @MapsId("idUser")
+    @JoinColumn(name = "id_user", nullable = false)
     private User user;
 
-    @ManyToOne(optional = false) @JoinColumn(name = "goal_template_id")
+    @ManyToOne(fetch = FetchType.LAZY) @MapsId("idGoal")
+    @JoinColumn(name = "id_goal", nullable = false)
     private Goal goal;
 }
