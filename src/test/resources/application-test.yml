@@ -1,17 +1,17 @@
 spring:
   datasource:
-    url: jdbc:h2:mem:testdb
+    url: jdbc:h2:mem:mysheila-test
     driver-class-name: org.h2.Driver
     username: sa
     password:
   jpa:
     hibernate:
-      ddl-auto: validate
-    database-platform: org.hibernate.dialect.H2Dialect
-    show-sql: true
-
+      ddl-auto: update
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.H2Dialect
   flyway:
-    enabled: true
+    enabled: false
     locations: classpath:db/migration
     baseline-on-migrate: true
 
@@ -19,10 +19,7 @@ spring:
     console:
       enabled: true
 
-server:
-  forward-headers-strategy: framework
-
 app:
   security:
-    jwt-secret: 698811f3f9fe4e193aea1a0c6804899949a46a39b523dfe26350d1da609f7e49
+    jwt-secret: lkteUbMmi4Nfa98WEnqiXEboC68VDxA3Qd7t1Gcpgno=
     jwt-expiration: 3600000

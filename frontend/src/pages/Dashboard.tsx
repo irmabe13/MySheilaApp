@@ -1,4 +1,5 @@
-import { useEffect, useState } from "react";
+import {useEffect, useState} from "react";
+
 const API_URL = import.meta.env.VITE_API_URL ?? "http://localhost:8080/api";
 
 export default function Dashboard() {
@@ -8,16 +9,19 @@ export default function Dashboard() {
     useEffect(() => {
         const at = localStorage.getItem("accessToken");
         fetch(`${API_URL}/users/me`, {
-            headers: { Authorization: at ? `Bearer ${at}` : "" }
+            headers: {Authorization: at ? `Bearer ${at}` : ""}
         })
-            .then(async (r) => { if (!r.ok) throw new Error(await r.text()); return r.json(); })
+            .then(async (r) => {
+                if (!r.ok) throw new Error(await r.text());
+                return r.json();
+            })
             .then(setMe)
             .catch((e) => setErr(e.message));
     }, []);
 
     function logout() {
         const at = localStorage.getItem("accessToken");
-        fetch(`${API_URL}/auth/logout`, { method: "POST", headers: { Authorization: `Bearer ${at}` } })
+        fetch(`${API_URL}/auth/logout`, {method: "POST", headers: {Authorization: `Bearer ${at}`}})
             .finally(() => {
                 localStorage.removeItem("accessToken");
                 localStorage.removeItem("refreshToken");

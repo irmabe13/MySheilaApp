@@ -3,51 +3,227 @@
 
 /* ================= TOKENS (Liquid‑Week) ================= */
 @theme {
-  --color-ink: #0b1020;
-  --color-paper: #ffffff;
+    --color-ink: #0b1020;
+    --color-paper: #ffffff;
 
 
-  /* Palette Liquid */
-  --color-lav-50: #ecebff;
-  --color-lav-100: #e1d9ff;
-  --color-indigo: #6e56f6; /* accent principal */
-  --color-mint: #58f1a7; /* accent 2 */
-  --color-azure: #00d4ff; /* accent 3 */
-  --color-night: #171430; /* texte accent */
-
-
-  --radius-xl2: 1.25rem;
+    /* Palette Liquid */
+    --color-lav-50: #ecebff;
+    --color-lav-100: #e1d9ff;
+    --color-indigo: #6e56f6; /* accent principal */
+    --color-mint: #58f1a7; /* accent 2 */
+    --color-azure: #00d4ff; /* accent 3 */
+    --color-night: #171430; /* texte accent */
+    --radius-xl2: 1.25rem;
 }
 
 
 /* ================= UTILITAIRES DESIGN ================= */
 @utility glass {
-  background: color-mix(in oklab, white 82%, transparent);
-  backdrop-filter: blur(12px);
-  border: 1px solid color-mix(in oklab, var(--color-night) 16%, transparent);
+    background: color-mix(in oklab, white 82%, transparent);
+    backdrop-filter: blur(12px);
+    border: 1px solid color-mix(in oklab, var(--color-night) 16%, transparent);
 }
 
 
 @utility noise {
-  pointer-events: none;
-  opacity: .06;
-  background-image: radial-gradient(#000 0.6px, transparent 0.6px);
-  background-size: 14px 14px;
+    pointer-events: none;
+    opacity: .06;
+    background-image: radial-gradient(#000 0.6px, transparent 0.6px);
+    background-size: 14px 14px;
 }
 
 
 @utility ring-glow {
-  box-shadow:
-          0 0 0 2px color-mix(in oklab, var(--color-indigo) 38%, transparent),
-          0 0 28px color-mix(in oklab, var(--color-mint) 35%, transparent);
+    box-shadow: 0 0 0 2px color-mix(in oklab, var(--color-indigo) 38%, transparent),
+    0 0 28px color-mix(in oklab, var(--color-mint) 35%, transparent);
 }
 
 
 /* Motion */
-@keyframes bob { 0%,100%{ transform: translateY(0)} 50%{ transform: translateY(-5px)} }
-@keyframes sheenSlide { 0%{ transform: translateX(-55%);} 100%{ transform: translateX(55%);} }
-@utility floaty { animation: bob 7s ease-in-out infinite; }
-@utility sheen { animation: sheenSlide 6s ease-in-out infinite; }
+@keyframes bob {
+    0%, 100% {
+        transform: translateY(0)
+    }
+    50% {
+        transform: translateY(-5px)
+    }
+}
+
+@keyframes sheenSlide {
+    0% {
+        transform: translateX(-55%);
+    }
+    100% {
+        transform: translateX(55%);
+    }
+}
+
+@utility floaty {
+    animation: bob 7s ease-in-out infinite;
+}
+@utility sheen {
+    animation: sheenSlide 6s ease-in-out infinite;
+}
 
 
-@media (prefers-reduced-motion: reduce) { .floaty, .sheen { animation: none; } }
+@media (prefers-reduced-motion: reduce) {
+    .floaty, .sheen {
+        animation: none;
+    }
+}
+
+/* Conteneur page (fond pastel doux) */
+.page-wrap {
+    min-height: 100svh;
+    background: linear-gradient(180deg, #F4EEF9 0%, #EEF4FA 100%);
+    display: grid;
+    grid-template-rows: 1fr auto; /* contenu + footer/cta mobile */
+}
+
+/* Card centrale */
+.card {
+    background: #fff;
+    border-radius: 16px;
+    box-shadow: 0 10px 30px rgba(43, 53, 86, 0.08);
+    padding: clamp(16px, 2.5vw, 28px);
+    width: min(960px, 92vw);
+    margin: auto;
+}
+
+/* Titre / sous-titre */
+.h-title {
+    font-size: clamp(22px, 2.2vw, 28px);
+    font-weight: 700;
+    color: #1f2544;
+    margin: 0 0 6px;
+}
+
+.h-sub {
+    color: #5a6280;
+    margin: 0 0 22px;
+}
+
+/* Bouton dégradé comme l'auth */
+.btn-primary {
+    border: 0;
+    color: #fff;
+    font-weight: 600;
+    padding: 12px 18px;
+    border-radius: 12px;
+    cursor: pointer;
+    background: linear-gradient(90deg, #6CC3FF 0%, #7EE3CB 45%, #A48BFF 100%);
+    box-shadow: 0 6px 18px rgba(116, 150, 255, 0.25);
+    transition: transform .06s ease;
+}
+
+.btn-primary:active {
+    transform: translateY(1px);
+}
+
+.btn-ghost {
+    background: transparent;
+    border: 1px solid #cfd5ea;
+    color: #2b3556;
+    padding: 12px 16px;
+    border-radius: 12px;
+    cursor: pointer;
+}
+
+/* Grilles */
+.grid {
+    display: grid;
+    gap: 14px;
+}
+
+.grid-goals {
+    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+}
+
+/* Cartes objectifs */
+.goal-card {
+    border: 1px solid #e6e9f4;
+    border-radius: 14px;
+    padding: 14px;
+    background: #fff;
+    cursor: pointer;
+    transition: border-color .15s ease, box-shadow .15s ease;
+}
+
+
+.goal-card:hover {
+    border-color: #cbd3f1;
+    box-shadow: 0 6px 16px rgba(43, 53, 86, .06);
+}
+
+.goal-card.active {
+    border-color: #8ea2ff;
+    box-shadow: 0 8px 20px rgba(116, 150, 255, .18);
+}
+
+.goal-cat {
+    font-size: 12px;
+    color: #7a82a6;
+    margin-bottom: 6px;
+}
+
+.goal-name {
+    font-weight: 600;
+    color: #1f2544;
+}
+
+/* Disponibilités */
+.avail-grid {
+    width: 100%;
+    border-collapse: collapse;
+    background: #fff;
+    border: 1px solid #e6e9f4;
+    border-radius: 12px;
+    overflow: hidden;
+}
+
+.avail-grid th, .avail-grid td {
+    padding: 10px;
+    text-align: center;
+    border-bottom: 1px solid #eef1f8;
+}
+
+.avail-grid th {
+    background: #f7f8fc;
+    font-weight: 600;
+    color: #404766;
+}
+
+.avail-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    border: 1px solid #dfe4f5;
+    border-radius: 999px;
+    padding: 6px 10px;
+    font-size: 12px;
+    color: #2b3556;
+    background: #fff;
+}
+
+.avail-chip input {
+    transform: translateY(1px);
+}
+
+/* Footer d’actions (mobile-friendly) */
+.actions {
+    display: flex;
+    gap: 10px;
+    justify-content: flex-end;
+    padding: 18px;
+    width: min(960px, 92vw);
+    margin: 0 auto 22px;
+}
+
+@media (max-width: 640px) {
+    .actions {
+        position: sticky;
+        bottom: 0;
+        background: linear-gradient(180deg, rgba(244, 238, 249, 0), #F4EEF9 40%);
+    }
+}

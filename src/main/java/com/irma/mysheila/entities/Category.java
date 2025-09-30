@@ -1,7 +1,17 @@
 package com.irma.mysheila.entities;
 
-import jakarta.persistence.*;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
 
 @Entity
 @Table(name = "categories")
@@ -12,11 +22,11 @@ import lombok.*;
 @Builder
 public class Category {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id_category")
-    private Integer idCategory;
+  @Id
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
+  @Column(name = "id_category")
+  private Integer idCategory;
 
-    @Column(name = "name", nullable = false, unique = true)
-    private String name;
+  @Column(name = "name", nullable = false, unique = true)
+  private String name;
 }

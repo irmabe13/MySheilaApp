@@ -1,7 +1,7 @@
 package com.irma.mysheila.repositories;
 
-import com.irma.mysheila.entities.Category;
 import org.springframework.data.jpa.repository.JpaRepository;
 
-public interface CategoryRepository extends JpaRepository<Category, Integer> {
-}
+import com.irma.mysheila.entities.Category;
+
+public interface CategoryRepository extends JpaRepository<Category, Integer> {}

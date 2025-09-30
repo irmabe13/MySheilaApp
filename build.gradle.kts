@@ -2,7 +2,9 @@ plugins {
     java
     id("org.springframework.boot") version "3.4.3"
     id("io.spring.dependency-management") version "1.1.7"
+    id("com.diffplug.spotless") version "6.25.0"
     jacoco
+    checkstyle
 }
 
 group = "com.irma"
@@ -34,12 +36,11 @@ dependencies {
     implementation("org.flywaydb:flyway-mysql")
     implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:2.8.9")
 
-
     testImplementation("org.springframework.security:spring-security-test")
     testImplementation("org.springframework.boot:spring-boot-starter-test")
-    testImplementation ("org.mockito:mockito-core")
+    testImplementation("org.mockito:mockito-core")
     testImplementation("org.mockito:mockito-junit-jupiter")
-    testImplementation ("org.junit.jupiter:junit-jupiter-api")
+    testImplementation("org.junit.jupiter:junit-jupiter-api")
     testImplementation("com.h2database:h2")
 
     compileOnly("org.projectlombok:lombok:1.18.36")
@@ -56,10 +57,6 @@ dependencies {
 
 }
 
-tasks.withType<Test> {
-    useJUnitPlatform()
-}
-
 jacoco {
     toolVersion = "0.8.10"
 }
@@ -73,10 +70,33 @@ tasks.jacocoTestReport {
     dependsOn(tasks.test)
     reports {
         xml.required.set(true)
-        csv.required.set(false)
-        html.outputLocation.set(layout.buildDirectory.dir("jacocoHtml"))
-        }
+        html.required.set(true)
     }
+}
+
+checkstyle {
+    toolVersion = "10.12.3"
+    configFile = file("${rootDir}/config/checkstyle/checkstyle.xml")
+    isShowViolations = true
+}
+
+tasks.withType<Checkstyle> {
+    reports {
+        xml.required.set(false)
+        html.required.set(true)
+    }
+    ignoreFailures = true
+}
+
+spotless {
+    java {
+        target("src/**/*.java")
+        googleJavaFormat()
+        removeUnusedImports()
+        importOrder("", "jakarta", "java", "javax", "org", "com", "io")
+        endWithNewline()
+    }
+}
 
 
 
