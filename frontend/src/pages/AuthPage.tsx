@@ -1,16 +1,12 @@
-import {type ComponentProps, type FormEvent, useMemo, useState} from "react";
+import {type ComponentProps, type FormEvent, useEffect, useMemo, useState} from "react";
 import logo from "../assets/logo.png";
-import {useNavigate} from "react-router-dom";
-
-const API_URL =
-    (import.meta as any)?.env?.VITE_API_URL ??
-    "http://localhost:8080/api";
+import {useMatch, useNavigate} from "react-router-dom";
+import {login, register as userAuth} from "../services/auth.service";
 
 
 function AppPresentation() {
     const DAYS = ["Dim", "Lun", "Mar", "Mer", "Jeu", "Ven", "Sam"] as const;
 
-    // Canevas & grille (08:00 → 22:00)
     const W = 1000, H = 480;
     const gridX = 100, gridY = 160, gridW = 720, gridH = 220;
     const colW = gridW / DAYS.length;
@@ -18,7 +14,6 @@ function AppPresentation() {
     const centers = useMemo(() => DAYS.map((_, i) => gridX + colW * (i + 0.5)), [colW]);
     const timeToY = (h: number, m = 0) => gridY + (((h + m / 60) - 8) / 14) * gridH;
 
-    // Bandes de disponibilités (exemples illustratifs)
     const availBands = [
         {label: "Disponibilités matin", start: timeToY(9), end: timeToY(12), color: "var(--ms-primary)"},
         {label: "Disponibilités après-midi", start: timeToY(14), end: timeToY(16), color: "var(--ms-secondary)"},
@@ -212,7 +207,9 @@ function LabeledInput({label, className = "", ...props}: { label: string } & Com
 }
 
 function AuthFormCard() {
-    const [tab, setTab] = useState<"login" | "register">("login");
+    const navigate = useNavigate();
+    const inRegister = useMatch("/register") !== null;
+    const [tab, setTab] = useState<"login" | "register">(inRegister ? "register" : "login");
     const [email, setEmail] = useState("");
     const [pwd, setPwd] = useState("");
     const [first, setFirst] = useState("");
@@ -221,7 +218,10 @@ function AuthFormCard() {
     const [msg, setMsg] = useState<string | null>(null);
     const [err, setErr] = useState<string | null>(null);
     const [loading, setLoading] = useState(false);
-    const navigate = useNavigate();
+
+    useEffect(() => {
+        setTab(inRegister ? "register" : "login");
+    }, [inRegister]);
 
     async function onSubmit(e: FormEvent) {
         e.preventDefault();
@@ -238,51 +238,19 @@ function AuthFormCard() {
         setLoading(true);
         try {
             if (tab === "login") {
-                const res = await fetch(`${API_URL}/auth/login`, {
-                    method: "POST",
-                    headers: {"Content-Type": "application/json"},
-                    body: JSON.stringify({email, password: pwd})
-                });
-                if (!res.ok) {
-                    const errBody = await res.json().catch(() => ({}));
-                    throw new Error(errBody?.message || "Identifiants invalides");
-                }
-                const data = await res.json() as { accessToken: string; refreshToken?: string };
-                localStorage.setItem("accessToken", data.accessToken);
-                if (data.refreshToken) localStorage.setItem("refreshToken", data.refreshToken);
+                await login({email, password: pwd});
             } else {
-                // inscription puis connexion automatique
-                const resReg = await fetch(`${API_URL}/auth/register`, {
-                    method: "POST",
-                    headers: {"Content-Type": "application/json"},
-                    body: JSON.stringify({firstname: first, lastname: last, email, password: pwd})
-                });
-                if (!resReg.ok) {
-                    const errBody = await resReg.json().catch(() => ({}));
-                    throw new Error(errBody?.message || "Inscription impossible");
-                }
-                // enchaîne sur un login pour récupérer le token
-                const res = await fetch(`${API_URL}/auth/login`, {
-                    method: "POST",
-                    headers: {"Content-Type": "application/json"},
-                    body: JSON.stringify({email, password: pwd})
-                });
-                if (!res.ok) {
-                    const errBody = await res.json().catch(() => ({}));
-                    throw new Error(errBody?.message || "Connexion après inscription impossible");
-                }
-                const data = await res.json() as { accessToken: string; refreshToken?: string };
-                localStorage.setItem("accessToken", data.accessToken);
-                if (data.refreshToken) localStorage.setItem("refreshToken", data.refreshToken);
+                await userAuth({firstname: first, lastname: last, email, password: pwd});
+                await login({email, password: pwd}); // connexion auto
             }
-
             setMsg(tab === "login" ? "Connexion réussie ✅" : "Inscription réussie ✅");
-            navigate("/dashboard"); // adapte si ta route diffère
+            navigate("/dashboard");
         } catch (e: any) {
             setErr(e?.message || "Erreur d’authentification");
         } finally {
             setLoading(false);
         }
+
     }
 
     return (
@@ -300,11 +268,11 @@ function AuthFormCard() {
 
             {/* Tabs */}
             <div className="mb-5 inline-flex rounded-full border border-[color:var(--ms-primary-100)] bg-white p-1">
-                <button onClick={() => setTab("login")}
+                <button onClick={() => navigate("/login")}
                         className={`rounded-full px-3 py-2 text-sm ${tab === "login" ? "bg-[color:var(--ms-primary-50)] text-[color:var(--ms-ink)] shadow" : "text-gray-600"}`}>
                     Se connecter
                 </button>
-                <button onClick={() => setTab("register")}
+                <button onClick={() => navigate("/register")}
                         className={`rounded-full px-3 py-2 text-sm ${tab === "register" ? "bg-[color:var(--ms-primary-50)] text-[color:var(--ms-ink)] shadow" : "text-gray-600"}`}>
                     Créer un compte
                 </button>
@@ -352,7 +320,7 @@ function AuthFormCard() {
                 </button>
 
                 <div className="mt-2 text-center text-xs">
-                    <button type="button" onClick={() => setTab(tab === "login" ? "register" : "login")}
+                    <button type="button" onClick={() => navigate(tab === "login" ? "/register" : "/login")}
                             className="underline text-gray-600">
                         {tab === "login" ? "Créer un compte" : "J’ai déjà un compte"}
                     </button>
@@ -376,7 +344,7 @@ export default function AuthPage() {
             <style>{`
         :root{
           /* === Palette My Sheïla (violet + secondaires) === */
-          --ms-primary: #6E56F6;         /* VIOLET du logo (modifie ici si besoin) */
+          --ms-primary: #6E56F6;         /* VIOLET du logo */
           --ms-primary-50: #F3EFFF;      /* lavande claire */
           --ms-primary-100: #E6DFFF;     /* bordures douces */
           --ms-secondary: #2ED3B7;       /* teal/menthe */
