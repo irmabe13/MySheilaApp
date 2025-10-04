@@ -22,36 +22,40 @@ import com.irma.mysheila.repositories.UserRepository;
 @ActiveProfiles("test")
 public class SecurityIntegrationTest {
 
-  @Autowired MockMvc mvc;
-  @Autowired UserRepository userRepository;
-  @Autowired RoleRepository roleRepository;
-  @Autowired PasswordEncoder passwordEncoder;
+    @Autowired
+    MockMvc mvc;
+    @Autowired
+    UserRepository userRepository;
+    @Autowired
+    RoleRepository roleRepository;
+    @Autowired
+    PasswordEncoder passwordEncoder;
 
-  int userId;
-  String email = "secure@test.com";
+    int userId;
+    String email = "secure@test.com";
 
-  @BeforeEach
-  void setUp() {
-    userRepository.deleteAll();
-    roleRepository.deleteAll();
-    var u = new User();
-    u.setEmail(email);
-    u.setPassword(passwordEncoder.encode("pass123"));
-    u.setEnabled(true);
-    u.setFirstname("Secure");
-    u.setLastname("Test");
+    @BeforeEach
+    void setUp() {
+        userRepository.deleteAll();
+        roleRepository.deleteAll();
+        var u = new User();
+        u.setEmail(email);
+        u.setPassword(passwordEncoder.encode("pass123"));
+        u.setEnabled(true);
+        u.setFirstname("Secure");
+        u.setLastname("Test");
 
-    var role = new Role();
-    role.setName("USER");
-    role = roleRepository.save(role);
+        var role = new Role();
+        role.setName("USER");
+        role = roleRepository.save(role);
 
-    u.setRole(role);
+        u.setRole(role);
 
-    userId = userRepository.save(u).getIdUser();
-  }
+        userId = userRepository.save(u).getIdUser();
+    }
 
-  @Test
-  void me_requires_auth() throws Exception {
-    mvc.perform(get("/api/users/me")).andExpect(status().isUnauthorized());
-  }
+    @Test
+    void me_requires_auth() throws Exception {
+        mvc.perform(get("/api/users/me")).andExpect(status().isUnauthorized());
+    }
 }

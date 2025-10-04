@@ -22,15 +22,16 @@ import jakarta.persistence.Table;
 @AllArgsConstructor
 @Builder
 public class UserGoal {
-  @EmbeddedId private UsersGoalsId id;
+    @EmbeddedId
+    private UsersGoalsId id;
 
-  @ManyToOne(fetch = FetchType.LAZY)
-  @MapsId("idUser")
-  @JoinColumn(name = "id_user", nullable = false)
-  private User user;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @MapsId("idUser")
+    @JoinColumn(name = "id_user", nullable = false)
+    private User user;
 
-  @ManyToOne(fetch = FetchType.LAZY)
-  @MapsId("idGoal")
-  @JoinColumn(name = "id_goal", nullable = false)
-  private Goal goal;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @MapsId("idGoal")
+    @JoinColumn(name = "id_goal", nullable = false)
+    private Goal goal;
 }

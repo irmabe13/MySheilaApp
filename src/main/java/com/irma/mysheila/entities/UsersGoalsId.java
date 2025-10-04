@@ -17,6 +17,6 @@ import java.io.Serializable;
 @AllArgsConstructor
 @EqualsAndHashCode
 public class UsersGoalsId implements Serializable {
-  private Integer idUser;
-  private Integer idGoal;
+    private Integer idUser;
+    private Integer idGoal;
 }

@@ -10,7 +10,9 @@ import jakarta.validation.constraints.NotBlank;
 @NoArgsConstructor
 @AllArgsConstructor
 public class AuthRequest {
-  @NotBlank private String email;
+    @NotBlank
+    private String email;
 
-  @NotBlank private String password;
+    @NotBlank
+    private String password;
 }

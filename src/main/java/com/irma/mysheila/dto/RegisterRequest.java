@@ -15,12 +15,16 @@ import jakarta.validation.constraints.Size;
 @AllArgsConstructor
 public class RegisterRequest {
 
-  @NotBlank @Email private String email;
+    @NotBlank
+    @Email
+    private String email;
 
-  @NotBlank
-  @Size(min = 6, max = 72)
-  private String password;
+    @NotBlank
+    @Size(min = 12, message = "The password must contain at least 12 characters.")
+    private String password;
 
-  @NotBlank private String firstname;
-  @NotBlank private String lastname;
+    @NotBlank
+    private String firstname;
+    @NotBlank
+    private String lastname;
 }

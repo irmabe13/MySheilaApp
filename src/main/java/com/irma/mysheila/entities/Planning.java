@@ -23,17 +23,17 @@ import java.time.LocalTime;
 @AllArgsConstructor
 @Builder
 public class Planning {
-  @Id
-  @GeneratedValue(strategy = GenerationType.IDENTITY)
-  @Column(name = "id_planning")
-  private Integer idPlanning;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id_planning")
+    private Integer idPlanning;
 
-  @Column(name = "hour_begin", nullable = false)
-  private LocalTime hourBegin;
+    @Column(name = "hour_begin", nullable = false)
+    private LocalTime hourBegin;
 
-  @Column(name = "hour_end", nullable = false)
-  private LocalTime hourEnd;
+    @Column(name = "hour_end", nullable = false)
+    private LocalTime hourEnd;
 
-  @Column(name = "status", nullable = false, length = 20)
-  private String status;
+    @Column(name = "status", nullable = false, length = 20)
+    private String status;
 }

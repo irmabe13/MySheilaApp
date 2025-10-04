@@ -17,6 +17,6 @@ import java.io.Serializable;
 @AllArgsConstructor
 @EqualsAndHashCode
 public class PlanningsTasksId implements Serializable {
-  private Integer idPlanning;
-  private Integer idTask;
+    private Integer idPlanning;
+    private Integer idTask;
 }

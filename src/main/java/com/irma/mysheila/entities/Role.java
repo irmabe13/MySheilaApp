@@ -22,11 +22,11 @@ import jakarta.persistence.Table;
 @Builder
 public class Role {
 
-  @Id
-  @GeneratedValue(strategy = GenerationType.IDENTITY)
-  @Column(name = "id_role")
-  private Integer idRole;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id_role")
+    private Integer idRole;
 
-  @Column(name = "name", nullable = false, length = 20)
-  private String name;
+    @Column(name = "name", nullable = false, length = 20)
+    private String name;
 }

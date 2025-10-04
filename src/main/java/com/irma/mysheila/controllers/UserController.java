@@ -18,20 +18,25 @@ import com.irma.mysheila.repositories.UserRepository;
 @RequiredArgsConstructor
 public class UserController {
 
-  private final UserRepository userRepository;
+    private final UserRepository userRepository;
 
-  @GetMapping("/me")
-  public ResponseEntity<?> me(Authentication auth) {
-    if (auth == null || auth.getName() == null) {
-      return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(Map.of("error", "Unauthorized"));
+    @GetMapping("/me")
+    public ResponseEntity<?> me(Authentication auth) {
+        if (auth == null || auth.getName() == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(Map.of("error", "Unauthorized"));
+        }
+        return userRepository
+                .findByEmail(auth.getName())
+                .map(u -> Map.of("id", u.getIdUser(), "email", u.getEmail(), "role", u.getRole().getName()))
+                .map(ResponseEntity::ok)
+                .orElseGet(
+                        () ->
+                                ResponseEntity.status(HttpStatus.NOT_FOUND)
+                                        .body(Map.of("error", "User not found")));
     }
-    return userRepository
-        .findByEmail(auth.getName())
-        .map(u -> Map.of("id", u.getIdUser(), "email", u.getEmail(), "role", u.getRole().getName()))
-        .map(ResponseEntity::ok)
-        .orElseGet(
-            () ->
-                ResponseEntity.status(HttpStatus.NOT_FOUND)
-                    .body(Map.of("error", "User not found")));
-  }
+
+    @GetMapping("/")
+    public ResponseEntity<?> home() {
+        return ResponseEntity.status(HttpStatus.OK).body(userRepository.findAll());
+    }
 }

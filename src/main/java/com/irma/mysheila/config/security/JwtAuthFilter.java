@@ -23,47 +23,47 @@ import com.irma.mysheila.services.JwtService;
 @RequiredArgsConstructor
 public class JwtAuthFilter extends OncePerRequestFilter {
 
-  private final JwtService jwtService;
-  private final UserDetailsService userDetailsService;
+    private final JwtService jwtService;
+    private final UserDetailsService userDetailsService;
 
-  @Override
-  protected void doFilterInternal(
-      HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
-      throws ServletException, IOException {
-    final String authHeader = request.getHeader("Authorization");
-    final String jwt;
-    final String username;
+    @Override
+    protected void doFilterInternal(
+            HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
+            throws ServletException, IOException {
+        final String authHeader = request.getHeader("Authorization");
+        final String jwt;
+        final String username;
 
-    if (authHeader == null || !authHeader.startsWith("Bearer ")) {
-      filterChain.doFilter(request, response);
-      return;
+        if (authHeader == null || !authHeader.startsWith("Bearer ")) {
+            filterChain.doFilter(request, response);
+            return;
+        }
+
+        jwt = getJwtFormRequest(request);
+
+        if (!jwtService.isValidToken(jwt)) {
+            filterChain.doFilter(request, response);
+            return;
+        }
+
+        username = jwtService.extractUsernameFromToken(jwt);
+
+        if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
+            UserDetails userDetails = userDetailsService.loadUserByUsername(username);
+
+            if (jwtService.validateTokenForUser(jwt, userDetails)) {
+                UsernamePasswordAuthenticationToken authToken =
+                        new UsernamePasswordAuthenticationToken(
+                                userDetails, null, userDetails.getAuthorities());
+                authToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
+                SecurityContextHolder.getContext().setAuthentication(authToken);
+            }
+            filterChain.doFilter(request, response);
+        }
     }
 
-    jwt = getJwtFormRequest(request);
-
-    if (!jwtService.isValidToken(jwt)) {
-      filterChain.doFilter(request, response);
-      return;
+    private String getJwtFormRequest(HttpServletRequest request) {
+        final String authHeader = request.getHeader("Authorization");
+        return authHeader.substring(7);
     }
-
-    username = jwtService.extractUsernameFromToken(jwt);
-
-    if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
-      UserDetails userDetails = userDetailsService.loadUserByUsername(username);
-
-      if (jwtService.validateTokenForUser(jwt, userDetails)) {
-        UsernamePasswordAuthenticationToken authToken =
-            new UsernamePasswordAuthenticationToken(
-                userDetails, null, userDetails.getAuthorities());
-        authToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
-        SecurityContextHolder.getContext().setAuthentication(authToken);
-      }
-      filterChain.doFilter(request, response);
-    }
-  }
-
-  private String getJwtFormRequest(HttpServletRequest request) {
-    final String authHeader = request.getHeader("Authorization");
-    return authHeader.substring(7);
-  }
 }

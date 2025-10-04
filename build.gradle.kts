@@ -2,7 +2,6 @@ plugins {
     java
     id("org.springframework.boot") version "3.4.3"
     id("io.spring.dependency-management") version "1.1.7"
-    id("com.diffplug.spotless") version "6.25.0"
     jacoco
     checkstyle
 }
@@ -84,17 +83,6 @@ tasks.withType<Checkstyle> {
     reports {
         xml.required.set(false)
         html.required.set(true)
-    }
-    ignoreFailures = true
-}
-
-spotless {
-    java {
-        target("src/**/*.java")
-        googleJavaFormat()
-        removeUnusedImports()
-        importOrder("", "jakarta", "java", "javax", "org", "com", "io")
-        endWithNewline()
     }
 }
 

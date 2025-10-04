@@ -19,21 +19,21 @@ import com.irma.mysheila.repositories.UserRepository;
 @RequiredArgsConstructor
 public class CustomUserDetailsService implements UserDetailsService {
 
-  private final UserRepository userRepository;
+    private final UserRepository userRepository;
 
-  @Override
-  public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
-    User user =
-        userRepository
-            .findByEmail(email)
-            .orElseThrow(() -> new UsernameNotFoundException("User not found"));
+    @Override
+    public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
+        User user =
+                userRepository
+                        .findByEmail(email)
+                        .orElseThrow(() -> new UsernameNotFoundException("User not found"));
 
-    return new org.springframework.security.core.userdetails.User(
-        user.getEmail(), user.getPassword(), getAuthority(user));
-  }
+        return new org.springframework.security.core.userdetails.User(
+                user.getEmail(), user.getPassword(), getAuthority(user));
+    }
 
-  private Collection<? extends GrantedAuthority> getAuthority(User user) {
-    GrantedAuthority authority = new SimpleGrantedAuthority(user.getRole().getName());
-    return List.of(authority);
-  }
+    private Collection<? extends GrantedAuthority> getAuthority(User user) {
+        GrantedAuthority authority = new SimpleGrantedAuthority(user.getRole().getName());
+        return List.of(authority);
+    }
 }

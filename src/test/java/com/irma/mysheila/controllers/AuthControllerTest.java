@@ -23,31 +23,33 @@ import com.irma.mysheila.services.AuthService;
 
 public class AuthControllerTest {
 
-  @Mock private AuthService authService;
+    @Mock
+    private AuthService authService;
 
-  @InjectMocks private AuthController authController;
+    @InjectMocks
+    private AuthController authController;
 
-  private MockMvc mvc;
-  private final ObjectMapper objectMapper = new ObjectMapper();
+    private MockMvc mvc;
+    private final ObjectMapper objectMapper = new ObjectMapper();
 
-  @BeforeEach
-  void setUp() {
-    MockitoAnnotations.openMocks(this);
-    mvc = MockMvcBuilders.standaloneSetup(authController).build();
-  }
+    @BeforeEach
+    void setUp() {
+        MockitoAnnotations.openMocks(this);
+        mvc = MockMvcBuilders.standaloneSetup(authController).build();
+    }
 
-  @Test
-  @DisplayName("POST /api/auth/login")
-  public void login() throws Exception {
-    when(authService.login(any(AuthRequest.class)))
-        .thenReturn(new TokenPair("access-123", "refresh-456"));
-    var body = new AuthRequest("irma@test.com", "pass123");
-    mvc.perform(
-            post("/api/auth/login")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(body)))
-        .andExpect(status().isOk())
-        .andExpect(jsonPath("$.accessToken").value("access-123"))
-        .andExpect(jsonPath("$.refreshToken").value("refresh-456"));
-  }
+    @Test
+    @DisplayName("POST /api/auth/login")
+    public void login() throws Exception {
+        when(authService.login(any(AuthRequest.class)))
+                .thenReturn(new TokenPair("access-123", "refresh-456"));
+        var body = new AuthRequest("irma@test.com", "pass123");
+        mvc.perform(
+                        post("/api/auth/login")
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .content(objectMapper.writeValueAsString(body)))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.accessToken").value("access-123"))
+                .andExpect(jsonPath("$.refreshToken").value("refresh-456"));
+    }
 }

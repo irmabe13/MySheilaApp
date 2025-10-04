@@ -4,4 +4,5 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 import com.irma.mysheila.entities.Goal;
 
-public interface GoalRepository extends JpaRepository<Goal, Integer> {}
+public interface GoalRepository extends JpaRepository<Goal, Integer> {
+}

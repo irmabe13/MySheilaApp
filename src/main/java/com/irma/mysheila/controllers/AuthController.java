@@ -21,29 +21,29 @@ import com.irma.mysheila.services.AuthService;
 @RequiredArgsConstructor
 public class AuthController {
 
-  private final AuthService authService;
+    private final AuthService authService;
 
-  @PostMapping("/login")
-  public ResponseEntity<?> login(@Valid @RequestBody AuthRequest request) {
-    TokenPair tokenPair = authService.login(request);
-    return ResponseEntity.ok(tokenPair);
-  }
+    @PostMapping("/login")
+    public ResponseEntity<?> login(@Valid @RequestBody AuthRequest request) {
+        TokenPair tokenPair = authService.login(request);
+        return ResponseEntity.ok(tokenPair);
+    }
 
-  @PostMapping("/register")
-  public ResponseEntity<?> register(@Valid @RequestBody RegisterRequest request) {
-    authService.register(request);
-    return ResponseEntity.ok("User registered successfully");
-  }
+    @PostMapping("/register")
+    public ResponseEntity<?> register(@Valid @RequestBody RegisterRequest request) {
+        authService.register(request);
+        return ResponseEntity.ok("User registered successfully");
+    }
 
-  @PostMapping("/refresh-token")
-  public ResponseEntity<?> refreshToken(@Valid @RequestBody RefreshTokenRequest request) {
-    TokenPair tokenPair = authService.refreshToken(request);
-    return ResponseEntity.ok(tokenPair);
-  }
+    @PostMapping("/refresh-token")
+    public ResponseEntity<?> refreshToken(@Valid @RequestBody RefreshTokenRequest request) {
+        TokenPair tokenPair = authService.refreshToken(request);
+        return ResponseEntity.ok(tokenPair);
+    }
 
-  @PostMapping("/logout")
-  public ResponseEntity<?> logout() {
-    authService.logout();
-    return ResponseEntity.ok("You have been signed out");
-  }
+    @PostMapping("/logout")
+    public ResponseEntity<?> logout() {
+        authService.logout();
+        return ResponseEntity.ok("You have been signed out");
+    }
 }

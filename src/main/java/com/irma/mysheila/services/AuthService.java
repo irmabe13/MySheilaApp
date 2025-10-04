@@ -1,5 +1,21 @@
 package com.irma.mysheila.services;
 
+import lombok.AllArgsConstructor;
+
+import jakarta.transaction.Transactional;
+import jakarta.validation.Valid;
+
+import java.util.Optional;
+
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.stereotype.Service;
+
 import com.irma.mysheila.dto.AuthRequest;
 import com.irma.mysheila.dto.RefreshTokenRequest;
 import com.irma.mysheila.dto.RegisterRequest;
@@ -12,19 +28,6 @@ import com.irma.mysheila.exceptions.ResourceNotFoundException;
 import com.irma.mysheila.repositories.RoleRepository;
 import com.irma.mysheila.repositories.TokenRepository;
 import com.irma.mysheila.repositories.UserRepository;
-import jakarta.transaction.Transactional;
-import jakarta.validation.Valid;
-import lombok.AllArgsConstructor;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.stereotype.Service;
-
-import java.util.Optional;
 
 @Service
 @AllArgsConstructor
@@ -70,7 +73,7 @@ public class AuthService {
                         .findByEmail(request.getEmail())
                         .orElseThrow(() -> new ResourceNotFoundException("User Not Found"));
 
-        tokenRepository.revokeAllActiveByUser(user.getIdUser());
+        tokenRepository.revokeAllActiveByIdUser(user.getIdUser());
 
         TokenPair tokenPair = jwtService.generateTokenPair(authentication);
 
@@ -134,7 +137,7 @@ public class AuthService {
 
         userRepository
                 .findByEmail(userDetails.getUsername())
-                .ifPresent(user -> tokenRepository.revokeAllActiveByUser(user.getIdUser()));
+                .ifPresent(user -> tokenRepository.revokeAllActiveByIdUser(user.getIdUser()));
 
         SecurityContextHolder.clearContext();
     }
