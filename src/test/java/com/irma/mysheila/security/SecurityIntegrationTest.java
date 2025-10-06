@@ -1,8 +1,9 @@
 package com.irma.mysheila.security;
 
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-
+import com.irma.mysheila.entities.Role;
+import com.irma.mysheila.entities.User;
+import com.irma.mysheila.repositories.RoleRepository;
+import com.irma.mysheila.repositories.UserRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,10 +13,8 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 
-import com.irma.mysheila.entities.Role;
-import com.irma.mysheila.entities.User;
-import com.irma.mysheila.repositories.RoleRepository;
-import com.irma.mysheila.repositories.UserRepository;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @SpringBootTest
 @AutoConfigureMockMvc

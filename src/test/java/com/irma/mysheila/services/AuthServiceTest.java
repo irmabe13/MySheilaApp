@@ -1,20 +1,14 @@
 package com.irma.mysheila.services;
 
-import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
-import static org.hibernate.validator.internal.util.Contracts.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.never;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.verifyNoInteractions;
-import static org.mockito.Mockito.when;
-
-import java.util.Optional;
-
+import com.irma.mysheila.dto.AuthRequest;
+import com.irma.mysheila.dto.RegisterRequest;
+import com.irma.mysheila.dto.TokenPair;
+import com.irma.mysheila.entities.Role;
+import com.irma.mysheila.entities.Token;
+import com.irma.mysheila.entities.User;
+import com.irma.mysheila.repositories.RoleRepository;
+import com.irma.mysheila.repositories.TokenRepository;
+import com.irma.mysheila.repositories.UserRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -29,15 +23,20 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
-import com.irma.mysheila.dto.AuthRequest;
-import com.irma.mysheila.dto.RegisterRequest;
-import com.irma.mysheila.dto.TokenPair;
-import com.irma.mysheila.entities.Role;
-import com.irma.mysheila.entities.Token;
-import com.irma.mysheila.entities.User;
-import com.irma.mysheila.repositories.RoleRepository;
-import com.irma.mysheila.repositories.TokenRepository;
-import com.irma.mysheila.repositories.UserRepository;
+import java.util.Optional;
+
+import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
+import static org.hibernate.validator.internal.util.Contracts.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyNoInteractions;
+import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 public class AuthServiceTest {
@@ -133,7 +132,7 @@ public class AuthServiceTest {
         assertEquals("refresh-456", result.getRefreshToken());
 
         // Révocation des tokens actifs précédents
-        verify(tokenRepository).revokeAllActiveByIdUser(42);
+        verify(tokenRepository).revokeAllActiveTokensByIdUser(42);
         // Sauvegarde des deux nouveaux tokens
         verify(tokenRepository, times(2)).save(any(Token.class));
         // Contexte de sécurité mis à jour

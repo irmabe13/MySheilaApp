@@ -1,14 +1,13 @@
 package com.irma.mysheila.services;
 
-import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
-
+import com.irma.mysheila.entities.User;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.test.util.ReflectionTestUtils;
 
-import com.irma.mysheila.entities.User;
+import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
 public class JwtServiceTest {
 

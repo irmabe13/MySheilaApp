@@ -1,25 +1,20 @@
 package com.irma.mysheila.services;
 
-import lombok.extern.slf4j.Slf4j;
-
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
-
-import javax.crypto.SecretKey;
-
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.stereotype.Service;
-
 import com.irma.mysheila.dto.TokenPair;
-
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
+import javax.crypto.SecretKey;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.stereotype.Service;
 
 @Service
 @Slf4j
@@ -96,14 +91,12 @@ public class JwtService {
     }
 
     private Claims extractAllClaims(String token) {
-        Claims claims = null;
         try {
-            claims =
-                    Jwts.parser().verifyWith(getSignInKey()).build().parseSignedClaims(token).getPayload();
+            return Jwts.parser().verifyWith(getSignInKey()).build().parseSignedClaims(token).getPayload();
         } catch (JwtException | IllegalArgumentException e) {
-            throw new RuntimeException(e);
+            log.error("JWT Validation failed: {}", e.getMessage());
+            return null;
         }
-        return claims;
     }
 
     private SecretKey getSignInKey() {
