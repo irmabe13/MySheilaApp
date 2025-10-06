@@ -1,7 +1,5 @@
 services:
-
   app:
-
     build:
       context: .
       dockerfile: Dockerfile
@@ -21,6 +19,16 @@ services:
     depends_on:
       - database
 
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: mysheila_frontend
+    ports:
+      - "3000:80"
+    restart: always
+  
   database:
     image: mysql:8.0
     container_name: mysheila_db
