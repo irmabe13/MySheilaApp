@@ -9,6 +9,7 @@ import com.irma.mysheila.entities.User;
 import com.irma.mysheila.repositories.RoleRepository;
 import com.irma.mysheila.repositories.TokenRepository;
 import com.irma.mysheila.repositories.UserRepository;
+import java.util.Optional;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -22,8 +23,6 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.PasswordEncoder;
-
-import java.util.Optional;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.hibernate.validator.internal.util.Contracts.assertNotNull;
@@ -133,8 +132,8 @@ public class AuthServiceTest {
 
         // Révocation des tokens actifs précédents
         verify(tokenRepository).revokeAllActiveTokensByIdUser(42);
-        // Sauvegarde des deux nouveaux tokens
-        verify(tokenRepository, times(2)).save(any(Token.class));
+        // Sauvegarde du nouveau token d'accès uniquement (l'impl ne persiste pas le refresh token)
+        verify(tokenRepository, times(1)).save(any(Token.class));
         // Contexte de sécurité mis à jour
         Authentication inCtx = SecurityContextHolder.getContext().getAuthentication();
         assertNotNull(inCtx);
