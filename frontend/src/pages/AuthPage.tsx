@@ -4,7 +4,10 @@ import {useMatch, useNavigate} from "react-router-dom";
 import {login, register as userAuth} from "../services/auth.service";
 import LabeledInput from "../components/LabeledInput";
 import AppPresentation from "../components/AppPresentation";
+import axios from "axios";
 
+
+const MIN_PASSWORD_LENGTH = 12;
 
 function AuthFormCard() {
     const navigate = useNavigate();
@@ -35,6 +38,12 @@ function AuthFormCard() {
             return;
         }
 
+        if (tab === "register" && pwd.length < MIN_PASSWORD_LENGTH) {
+            setErr(`Le mot de passe doit contenir au moins ${MIN_PASSWORD_LENGTH} caractères.`);
+            return;
+        }
+
+
         setLoading(true);
         try {
             if (tab === "login") {
@@ -44,9 +53,33 @@ function AuthFormCard() {
                 await login({email, password: pwd}); // connexion auto
             }
             setMsg(tab === "login" ? "Connexion réussie ✅" : "Inscription réussie ✅");
-            navigate("/dashboard");
+            navigate("/onboarding", {replace: true});
         } catch (e: any) {
-            setErr(e?.message || "Erreur d’authentification");
+            console.error(e);
+            // Amélioration de la gestion des erreurs 400 du back-end (validation)
+            let errorMsg = "Erreur lors de l'authentification. Veuillez vérifier vos identifiants ou réessayer.";
+
+            if (axios.isAxiosError(e) && e.response) {
+                // Si c'est une erreur 400, on essaie d'extraire le message d'erreur du back-end.
+                if (e.response.status === 400) {
+                    // Spring peut retourner un objet d'erreur avec un message ou un tableau d'erreurs.
+                    const data = e.response.data as any;
+                    if (data.message && typeof data.message === 'string') {
+                        errorMsg = data.message;
+                    } else if (data.errors && Array.isArray(data.errors) && data.errors.length > 0) {
+                        // Par exemple, si le back-end renvoie une liste de Field Errors.
+                        errorMsg = `Erreurs de validation: ${data.errors.map((err: any) => err.defaultMessage || err.field).join(', ')}`;
+                    } else {
+                        // Cas par défaut pour 400 Bad Request
+                        errorMsg = "Erreur de validation des données (400 Bad Request). Vérifiez le format (Email, Mot de passe min. 12 car.).";
+                    }
+                } else if (e.response.status === 409) {
+                    errorMsg = "Un compte avec cette adresse e-mail existe déjà.";
+                } else {
+                    errorMsg = `Erreur (${e.response.status}): Une erreur inattendue est survenue.`;
+                }
+            }
+            setErr(errorMsg);
         } finally {
             setLoading(false);
         }

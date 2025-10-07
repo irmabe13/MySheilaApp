@@ -34,5 +34,13 @@ spring:
 
 logging:
   level:
+    # Niveau par défaut pour Spring et les librairies.
+    root: WARN
+
+    # Active le niveau INFO pour les logs de sécurité
     org.springframework.security: INFO
-    org.hibernate.SQL: INFO
+
+    org.hibernate.SQL: DEBUG
+    org.hibernate.orm.jdbc.bind: TRACE # Afficher les paramètres liés (bindings)
+
+    com.irma.mysheila: DEBUG
