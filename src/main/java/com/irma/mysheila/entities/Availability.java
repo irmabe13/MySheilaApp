@@ -9,16 +9,18 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
+import jakarta.persistence.UniqueConstraint;
+import java.time.LocalTime;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.time.LocalTime;
-
 @Entity
-@Table(name = "availabilities")
+@Table(name = "availabilities", uniqueConstraints = {
+        @UniqueConstraint(columnNames = {"id_user", "day", "hour_begin", "hour_end"})
+})
 @Getter
 @Setter
 @NoArgsConstructor
