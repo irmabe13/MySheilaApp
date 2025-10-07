@@ -1,15 +1,11 @@
-FROM gradle:8.5-jdk17 AS build
+FROM openjdk:21-jdk-slim
+
 WORKDIR /app
 
-COPY . .
+ARG JAR_FILE=target/*.jar
 
-RUN gradle build --no-daemon
-
-FROM eclipse-temurin:17-jre
-WORKDIR /app
-
-COPY --from=build /app/build/libs/*.jar app.jar
+COPY ./build/libs/MySheila-0.0.1-SNAPSHOT.jar /app.jar
 
 EXPOSE 8080
 
-ENTRYPOINT ["java", "-jar", "app.jar"]
+ENTRYPOINT ["java", "-jar", "/app.jar"]

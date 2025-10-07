@@ -1,0 +1,8 @@
+ALTER TABLE users_goals
+    ADD COLUMN assigned_at DATE NOT NULL;
+
+ALTER TABLE users_goals
+    ADD COLUMN status VARCHAR(50) NOT NULL DEFAULT 'IN_PROGRESS';
+
+ALTER TABLE users_goals
+    ADD COLUMN is_active BOOLEAN NOT NULL DEFAULT TRUE;

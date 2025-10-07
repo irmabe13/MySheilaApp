@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE module PUBLIC
+        "-//Checkstyle//DTD Checkstyle Configuration 1.3//EN"
+        "https://checkstyle.org/dtds/configuration_1_3.dtd">
+
+<module name="Checker">
+
+    <!-- Règles globales (fichiers) -->
+    <module name="FileTabCharacter">
+        <property name="eachLine" value="true"/>
+    </module>
+
+    <module name="NewlineAtEndOfFile"/>
+
+    <module name="SeverityMatchFilter">
+        <property name="severity" value="ignore"/> <!-- tu peux enlever ce bloc plus tard -->
+    </module>
+
+    <!-- Règles sur le code (parsing Java) -->
+    <module name="TreeWalker">
+
+        <!-- Indentation sûre (évite les erreurs de propriété) -->
+        <module name="Indentation">
+            <property name="basicOffset" value="4"/>
+            <property name="braceAdjustment" value="0"/>
+            <property name="caseIndent" value="4"/>
+            <property name="lineWrappingIndentation" value="8"/>
+            <property name="tabWidth" value="4"/>
+        </module>
+
+        <!-- Import / style -->
+        <module name="UnusedImports"/>
+        <module name="AvoidStarImport"/>
+        <module name="NoLineWrap"/>
+        <module name="NeedBraces"/>
+        <module name="WhitespaceAround"/>
+        <module name="EmptyBlock"/>
+
+        <!-- Quelques bonnes pratiques simples -->
+        <module name="EqualsHashCode"/>
+        <module name="SimplifyBooleanExpression"/>
+        <module name="SimplifyBooleanReturn"/>
+
+    </module>
+</module>
