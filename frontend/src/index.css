@@ -1,5 +1,15 @@
 @import "tailwindcss";
 
+:root {
+    --ms-primary: #6E56F6;
+    --ms-primary-50: #F3EFFF;
+    --ms-primary-100: #E6DFFF;
+    --ms-secondary: #2ED3B7;
+    --ms-peach: #FFB49B;
+    --ms-ink: #0b1020;
+    --ms-ink-soft: #374151;
+}
+
 
 /* ================= TOKENS (Liquid‑Week) ================= */
 @theme {

@@ -9,6 +9,9 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
+import java.time.LocalDate;
+import java.util.Collection;
+import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -17,10 +20,6 @@ import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
-
-import java.time.LocalDate;
-import java.util.Collection;
-import java.util.List;
 
 @Data
 @Entity
@@ -57,6 +56,10 @@ public class User implements UserDetails {
     @Builder.Default
     @Column(name = "enabled", nullable = false)
     private Boolean enabled = true;
+
+    @Builder.Default
+    @Column(name = "is_onboarding_complete", nullable = false)
+    private Boolean isOnboardingComplete = false;
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "id_role", nullable = false)
