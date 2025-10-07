@@ -9,5 +9,4 @@ public class MySheilaApplication {
     public static void main(String[] args) {
         SpringApplication.run(MySheilaApplication.class, args);
     }
-
 }
